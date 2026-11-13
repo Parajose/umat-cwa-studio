@@ -29,7 +29,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: msys2/setup-msys2@v2
         id: msys2
         with:
@@ -46,7 +46,7 @@ jobs:
           & ./scripts/release_windows.ps1
           & ./tests/gui_smoke.ps1
       - name: Upload portable ZIP and test screenshot
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: UMaT-CWA-Studio-windows-x64
           path: |
@@ -60,5 +60,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $version = (Get-Content VERSION -Raw).Trim()
-          gh release create "v$version" dist/*.zip dist/*.sha256 --target "$env:GITHUB_SHA" --title "UMaT CWA Studio $version - Windows Preview" --notes-file docs/RELEASE_NOTES.md --prerelease
+          gh release create "v$version" dist/*.zip dist/*.sha256 build/windows-results.png --target "$env:GITHUB_SHA" --title "UMaT CWA Studio $version - Windows Preview" --notes-file docs/RELEASE_NOTES.md --prerelease
           if ($LASTEXITCODE -ne 0) { throw 'Release publication failed.' }
