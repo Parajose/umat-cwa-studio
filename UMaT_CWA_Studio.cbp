@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+<FileVersion major="1" minor="6" />
+<Project>
+<Option title="UMaT CWA Studio" /><Option pch_mode="2" /><Option compiler="gcc" />
+<Build>
+<Target title="Debug"><Option output="bin/Debug/UMaT_CWA_Studio" prefix_auto="1" extension_auto="1" /><Option object_output="obj/Debug/" /><Option type="0" /><Option compiler="gcc" /><Compiler><Add option="-g" /></Compiler></Target>
+<Target title="Release"><Option output="bin/Release/UMaT_CWA_Studio" prefix_auto="1" extension_auto="1" /><Option object_output="obj/Release/" /><Option type="0" /><Option compiler="gcc" /><Compiler><Add option="-O2" /></Compiler><Linker><Add option="-s" /><Add option="-static" /></Linker></Target>
+</Build>
+<Compiler><Add option="-std=c++11" /><Add directory="include" /><Add option="-Wall" /><Add option="-Wextra" /></Compiler>
+<Linker><Add option="-mwindows" /><Add library="comctl32" /><Add library="shell32" /><Add library="ole32" /><Add library="comdlg32" /><Add library="gdi32" /><Add library="user32" /></Linker>
+<Unit filename="src/main.cpp" /><Unit filename="include/Models.h" /><Unit filename="include/Database.h" />
+<Extensions />
+</Project>
+</CodeBlocks_project_file>
