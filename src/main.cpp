@@ -147,9 +147,9 @@ class Application {
     }
     static LRESULT CALLBACK procedure(HWND h,UINT m,WPARAM w,LPARAM l){Application* app=reinterpret_cast<Application*>(GetWindowLongPtrW(h,GWLP_USERDATA));if(m==WM_NCCREATE){app=static_cast<Application*>(reinterpret_cast<CREATESTRUCTW*>(l)->lpCreateParams);app->window_=h;SetWindowLongPtrW(h,GWLP_USERDATA,reinterpret_cast<LONG_PTR>(app));}return app?app->message(m,w,l):DefWindowProcW(h,m,w,l);}
 public:
-    explicit Application(HINSTANCE i):instance_(i){background_=CreateSolidBrush(BG);white_=CreateSolidBrush(RGB(255,255,255));font_=CreateFontW(-17,0,0,0,FW_NORMAL,FALSE,FALSE,FALSE,DEFAULT_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,CLEARTYPE_QUALITY,DEFAULT_PITCH,L"Segoe UI");titleFont_=CreateFontW(-32,0,0,0,FW_BOLD,FALSE,FALSE,FALSE,DEFAULT_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,CLEARTYPE_QUALITY,DEFAULT_PITCH,L"Segoe UI");}
+    explicit Application(HINSTANCE i, const std::wstring& dataFolder=L""):instance_(i),folder_(dataFolder){background_=CreateSolidBrush(BG);white_=CreateSolidBrush(RGB(255,255,255));font_=CreateFontW(-17,0,0,0,FW_NORMAL,FALSE,FALSE,FALSE,DEFAULT_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,CLEARTYPE_QUALITY,DEFAULT_PITCH,L"Segoe UI");titleFont_=CreateFontW(-32,0,0,0,FW_BOLD,FALSE,FALSE,FALSE,DEFAULT_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,CLEARTYPE_QUALITY,DEFAULT_PITCH,L"Segoe UI");}
     ~Application(){database_.reset();DeleteObject(font_);DeleteObject(titleFont_);DeleteObject(background_);DeleteObject(white_);}
-    int run(){wchar_t local[MAX_PATH];if(FAILED(SHGetFolderPathW(nullptr,CSIDL_LOCAL_APPDATA|CSIDL_FLAG_CREATE,nullptr,SHGFP_TYPE_CURRENT,local)))throw std::runtime_error("Cannot locate your application data folder.");folder_=std::wstring(local)+L"\\UMaTCWAStudio";if(!CreateDirectoryW(folder_.c_str(),nullptr)&&GetLastError()!=ERROR_ALREADY_EXISTS)throw std::runtime_error("Cannot create the application data folder.");dbPath_=folder_+L"\\umat_cwa.db";database_.reset(new Database(utf8(dbPath_)));
+    int run(){if(folder_.empty()){wchar_t local[MAX_PATH];if(FAILED(SHGetFolderPathW(nullptr,CSIDL_LOCAL_APPDATA|CSIDL_FLAG_CREATE,nullptr,SHGFP_TYPE_CURRENT,local)))throw std::runtime_error("Cannot locate your application data folder.");folder_=std::wstring(local)+L"\\UMaTCWAStudio";}if(!CreateDirectoryW(folder_.c_str(),nullptr)&&GetLastError()!=ERROR_ALREADY_EXISTS)throw std::runtime_error("Cannot create the application data folder.");dbPath_=folder_+L"\\umat_cwa.db";database_.reset(new Database(utf8(dbPath_)));
         INITCOMMONCONTROLSEX controls={sizeof(controls),ICC_LISTVIEW_CLASSES};InitCommonControlsEx(&controls);
         WNDCLASSW wc={};wc.lpfnWndProc=procedure;wc.hInstance=instance_;wc.lpszClassName=L"UMaTCWAStudioWindow";wc.hCursor=LoadCursor(nullptr,IDC_ARROW);wc.hIcon=LoadIcon(nullptr,IDI_APPLICATION);wc.hbrBackground=background_;if(!RegisterClassW(&wc))throw std::runtime_error("Cannot register the application window.");
         RECT r={0,0,1010,680};DWORD style=WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;AdjustWindowRect(&r,style,FALSE);
@@ -157,4 +157,11 @@ public:
         databasePage();ShowWindow(window_,SW_SHOW);UpdateWindow(window_);MSG msg={};while(GetMessageW(&msg,nullptr,0,0)>0){if(!IsDialogMessageW(window_,&msg)){TranslateMessage(&msg);DispatchMessageW(&msg);}}return static_cast<int>(msg.wParam);
     }
 };
-int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int){try{Application app(h);return app.run();}catch(const std::exception& e){MessageBoxW(nullptr,wide(e.what()).c_str(),L"UMaT CWA Studio could not start",MB_OK|MB_ICONERROR);return 1;}}
+int WINAPI WinMain(HINSTANCE h,HINSTANCE,LPSTR,int){try{
+    int count=0;LPWSTR* arguments=CommandLineToArgvW(GetCommandLineW(),&count);
+    if(!arguments)throw std::runtime_error("Cannot read application arguments.");
+    std::wstring dataFolder;
+    if(count==3&&std::wstring(arguments[1])==L"--data-dir")dataFolder=arguments[2];
+    else if(count!=1){LocalFree(arguments);throw std::runtime_error("Usage: UMaT_CWA_Studio.exe [--data-dir EXISTING_PARENT_PATH\\data]");}
+    LocalFree(arguments);
+    Application app(h,dataFolder);return app.run();}catch(const std::exception& e){MessageBoxW(nullptr,wide(e.what()).c_str(),L"UMaT CWA Studio could not start",MB_OK|MB_ICONERROR);return 1;}}
