@@ -2,7 +2,15 @@
 
 An object-oriented C++ Windows desktop application for entering student results, calculating credit-weighted averages, and viewing saved records in SQLite. Created by Joseph Tetteh (TJay). Independent educational project; not an official university application.
 
-**Preview release: 0.1.0.** This download contains source and release preparation tools. It does not contain a precompiled Windows executable. Windows compilation and visual verification are still required before distributing a runnable build.
+[![Windows build and test](https://github.com/Parajose/umat-cwa-studio/actions/workflows/windows.yml/badge.svg)](https://github.com/Parajose/umat-cwa-studio/actions/workflows/windows.yml)
+
+## Download and try
+
+**[Download the Windows x64 preview](https://github.com/Parajose/umat-cwa-studio/releases/tag/v0.1.0)**. Choose the portable ZIP, extract the entire folder, then double-click `UMaT_CWA_Studio.exe`. Friends do not need a compiler, installer, administrator account or database server. Windows 10/11 x64 is required.
+
+This repository contains the source. Compiled portable ZIPs and SHA-256 checksums are provided separately under Releases. The executable is an unsigned educational preview; broader manual testing across Windows versions and display scales remains useful.
+
+![Saved student results and course details](https://github.com/Parajose/umat-cwa-studio/releases/download/v0.1.0/windows-results.png)
 
 ## Interface and behaviour
 
@@ -88,10 +96,20 @@ Linux needs the SQLite runtime (`libsqlite3.so.0`). Tests use a temporary databa
 
 ## GitHub repository
 
-Source published with TJay's approval at `Parajose/umat-cwa-studio` as a private repository. Windows executable builds and a tagged binary release remain pending verification.
+Public source repository: `Parajose/umat-cwa-studio`. The Windows release workflow compiles the GUI, tests calculation/storage behaviour, checks form replacement and input clearing, verifies persistence after restarting, and packages the portable build. See [validation evidence](docs/VALIDATION.md).
 
 [Release notes and verification steps](docs/GITHUB_RELEASE_DRAFT.md) are included for review. No open-source license has been selected; author approval is needed before adding a redistribution license.
 
+## Isolated test data
+
+By default the application uses your Windows user data folder. For a separate test database, pass an absolute data path whose parent already exists:
+
+```powershell
+.\bin\Release\UMaT_CWA_Studio.exe --data-dir "C:\Users\YourName\Desktop\CWA-Test"
+```
+
+The named folder is created if needed. The automated GUI test always uses a temporary isolated folder and removes its synthetic records afterwards.
+
 ## Known limits
 
-The GUI is fixed at a 1010 × 680 client area and may need adjustments at high display scaling. There is no login, encryption, multi-user service, repeat-course policy, or import from the old text-file application. This package preserves the original GUI implementation; it does not claim Windows runtime validation in this Linux environment.
+The GUI is fixed at a 1010 × 680 client area and may need adjustments at high display scaling. There is no login, encryption, multi-user service, repeat-course policy, or import from the old text-file application. The Windows GUI has passed automated smoke checks on GitHub's Windows runner. The manual checklist covers additional interaction and display scenarios.
