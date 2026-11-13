@@ -1,6 +1,7 @@
 #pragma once
 #include "Models.h"
 #include <memory>
+#include <cstring>
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -33,7 +34,11 @@ class Database {
     const char* (*error_)(sqlite3*)=nullptr;
     template<class T> void symbol(T& target,const char* name) {
 #ifdef _WIN32
-        target=reinterpret_cast<T>(GetProcAddress(module_,name));
+        // Win32 guarantees GetProcAddress can represent exported function addresses.
+        // Copy the representation without an incompatible function-type cast.
+        FARPROC address=GetProcAddress(module_,name);
+        static_assert(sizeof(target)==sizeof(address),"Unsupported function pointer representation");
+        std::memcpy(&target,&address,sizeof(target));
 #else
         target=reinterpret_cast<T>(dlsym(module_,name));
 #endif
