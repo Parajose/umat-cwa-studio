@@ -156,8 +156,8 @@ public:
         RECT r={0,0,1010,680};DWORD style=WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;AdjustWindowRect(&r,style,FALSE);
         RECT work={};if(!SystemParametersInfoW(SPI_GETWORKAREA,0,&work,0))throw std::runtime_error("Cannot read the desktop work area.");
         int width=r.right-r.left,height=r.bottom-r.top;
-        int x=work.left+std::max(0,(work.right-work.left-width)/2);
-        int y=work.top+std::max(0,(work.bottom-work.top-height)/2);
+        int x=work.left+std::max(0L,(work.right-work.left-width)/2);
+        int y=work.top+std::max(0L,(work.bottom-work.top-height)/2);
         if(!CreateWindowExW(WS_EX_CONTROLPARENT,wc.lpszClassName,L"UMaT CWA Studio",style,x,y,width,height,nullptr,nullptr,instance_,this))throw std::runtime_error("Cannot open the application window.");
         databasePage();ShowWindow(window_,SW_SHOW);UpdateWindow(window_);MSG msg={};while(GetMessageW(&msg,nullptr,0,0)>0){if(!IsDialogMessageW(window_,&msg)){TranslateMessage(&msg);DispatchMessageW(&msg);}}return static_cast<int>(msg.wParam);
     }
