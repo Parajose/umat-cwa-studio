@@ -78,13 +78,13 @@ https://www.sqlite.org/lang_transaction.html
 
 Build the **Release** target, then send `bin/Release/UMaT_CWA_Studio.exe` in a ZIP. Have your friend extract it before running. Each Windows user gets their own empty database on first launch. Do not include your database unless you intend to share the records.
 
-The Release build statically links the MinGW runtimes to reduce runtime dependencies. Any other missing runtime dependency depends on the installed MinGW distribution. This package contains source code and build configuration, not a precompiled EXE.
+The Release build statically links the MinGW runtimes to reduce runtime dependencies. Any other missing runtime dependency depends on the installed MinGW distribution. The source archive contains build configuration; the GitHub Releases page provides a separate precompiled portable ZIP.
 
 ## Validation and limitations
 
 The portable model and actual SQLite storage layer were compiled using g++ with C++11 and warnings enabled. Automated checks cover weighted calculations, grade boundaries, invalid marks/credits, duplicate records, search, save/update, transactions, course removal and persistence after reopening.
 
-**The Windows GUI has not been compiled or run in this Linux environment.** Build and manually check it on Windows before distributing. Included checks: `WINDOWS_CHECKLIST.md`.
+The Windows GUI was compiled and run on GitHub's Windows Server 2025 runner with MSYS2 UCRT64 GCC 16.2. Automated checks passed for form replacement, cleared course fields, saved results, the 78.75% worked example and restart persistence. See `VALIDATION.md`. The manual checklist covers additional Windows versions, display scales and interaction paths.
 
 The window is fixed-size, designed for a standard desktop at 100% scaling. Very small displays or high display scaling may need layout adjustments. All records are local and unencrypted. No login, networking or multi-user permissions are implemented.
 
