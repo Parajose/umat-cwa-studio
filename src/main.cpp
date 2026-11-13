@@ -102,7 +102,8 @@ class Application {
         for(const auto& c:s.courses()){row(detail_,i++,{c.code(),c.title(),c.semester(),cell(c.mark()),cell(c.credits()),std::string(1,c.grade()),cell(c.weighted())});semesters.insert(c.semester());}
         put(summary_,s.name()+"  |  Credits: "+cell(s.credits())+"  |  Weighted marks: "+cell(s.weighted())+"  |  Average: "+cell(s.average())+"%");
         std::string info="CWA requires ALL completed courses. For one semester only, the average is SWA.\r\n";
-        for(const auto& sem:semesters)info+=sem+": SWA "+cell(s.average(sem))+"%  ("+cell(s.credits(sem))+" credits)\r\n";put(semesterSummary_,info);
+        for(const auto& sem:semesters){info+=sem+": SWA "+cell(s.average(sem))+"%  ("+cell(s.credits(sem))+" credits)\r\n";}
+        put(semesterSummary_,info);
     }
     void exportCSV(){auto students=database_->all();if(students.empty())throw std::runtime_error("No saved records to export.");wchar_t path[MAX_PATH]=L"umat_results.csv";OPENFILENAMEW dlg={};dlg.lStructSize=sizeof(dlg);dlg.hwndOwner=window_;dlg.lpstrFilter=L"CSV file (*.csv)\0*.csv\0\0";dlg.lpstrFile=path;dlg.nMaxFile=MAX_PATH;dlg.lpstrDefExt=L"csv";dlg.Flags=OFN_OVERWRITEPROMPT|OFN_PATHMUSTEXIST;
         if(!GetSaveFileNameW(&dlg))return;
@@ -153,7 +154,11 @@ public:
         INITCOMMONCONTROLSEX controls={sizeof(controls),ICC_LISTVIEW_CLASSES};InitCommonControlsEx(&controls);
         WNDCLASSW wc={};wc.lpfnWndProc=procedure;wc.hInstance=instance_;wc.lpszClassName=L"UMaTCWAStudioWindow";wc.hCursor=LoadCursor(nullptr,IDC_ARROW);wc.hIcon=LoadIcon(nullptr,IDI_APPLICATION);wc.hbrBackground=background_;if(!RegisterClassW(&wc))throw std::runtime_error("Cannot register the application window.");
         RECT r={0,0,1010,680};DWORD style=WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX;AdjustWindowRect(&r,style,FALSE);
-        if(!CreateWindowExW(WS_EX_CONTROLPARENT,wc.lpszClassName,L"UMaT CWA Studio",style,CW_USEDEFAULT,CW_USEDEFAULT,r.right-r.left,r.bottom-r.top,nullptr,nullptr,instance_,this))throw std::runtime_error("Cannot open the application window.");
+        RECT work={};if(!SystemParametersInfoW(SPI_GETWORKAREA,0,&work,0))throw std::runtime_error("Cannot read the desktop work area.");
+        int width=r.right-r.left,height=r.bottom-r.top;
+        int x=work.left+std::max(0,(work.right-work.left-width)/2);
+        int y=work.top+std::max(0,(work.bottom-work.top-height)/2);
+        if(!CreateWindowExW(WS_EX_CONTROLPARENT,wc.lpszClassName,L"UMaT CWA Studio",style,x,y,width,height,nullptr,nullptr,instance_,this))throw std::runtime_error("Cannot open the application window.");
         databasePage();ShowWindow(window_,SW_SHOW);UpdateWindow(window_);MSG msg={};while(GetMessageW(&msg,nullptr,0,0)>0){if(!IsDialogMessageW(window_,&msg)){TranslateMessage(&msg);DispatchMessageW(&msg);}}return static_cast<int>(msg.wParam);
     }
 };
