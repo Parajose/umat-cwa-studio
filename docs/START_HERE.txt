@@ -1,0 +1,29 @@
+UMaT CWA Studio - Friend Preview
+By Joseph Tetteh (TJay)
+
+1. Extract the entire portable ZIP to a normal folder.
+2. Double-click UMaT_CWA_Studio.exe on Windows 10/11.
+3. Click + New student, enter a test ID/name, then Continue to courses.
+4. Enter a course, semester, mark (0-100), and credit hours; click Add course +.
+5. Repeat, then click Save & View Database to see the saved results table.
+
+Try marks 80, 70, 90 with credits 3, 3, 2. Expected average: 78.75.
+Course fields clear after Add; Save replaces entry with the database view.
+
+Your database is stored at:
+%LOCALAPPDATA%\UMaTCWAStudio\umat_cwa.db
+Use Open data folder to find it. Each Windows user has separate data.
+Existing copies under the same user share this database. No online syncing.
+Close the app before making a backup. Use fictional records when testing.
+
+No installation, administrator account, compiler or database server required.
+Use a build matching your Windows architecture. If the app cannot load SQLite,
+check that Windows is supported and up to date; do not download random DLLs.
+If Windows blocks an unsigned app, report the exact message to TJay for review.
+
+Send TJay: Windows version, display scaling, steps to reproduce, expected and
+actual result. A screenshot is useful; hide any personal student information.
+
+For details see USER_GUIDE.md. This is an independent educational preview,
+not official academic records software. To remove it, delete the extracted
+folder. Its saved database remains until you separately remove the data folder.
