@@ -1,0 +1,28 @@
+name: Bug report
+description: Report a problem with the student-results application
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: Please use fictional student data and hide personal details in screenshots.
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and display scaling
+      placeholder: Windows 11 x64, 150% scaling
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Application version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include expected and actual behaviour, and any error message.
+    validations:
+      required: true
