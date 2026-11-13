@@ -49,7 +49,7 @@ Friends extract the entire portable ZIP, open its folder, and double-click `UMaT
 
 ## Data and calculations
 
-Each Windows user gets their own database at `%LOCALAPPDATA%\\UMaTCWAStudio\\umat_cwa.db`. The records persist across launches and are not synchronised between friends. Existing copies run by the same Windows user share this location. Close the app before backing up the database. Records are local and unencrypted.
+Each Windows user gets their own database at `%LOCALAPPDATA%\UMaTCWAStudio\umat_cwa.db`. The records persist across launches and are not synchronised between friends. Existing copies run by the same Windows user share this location. Close the app before backing up the database. Records are local and unencrypted.
 
 Weighted average = sum(mark × credits) / sum(credits). Enter all applicable completed courses for CWA, or one semester for SWA. The app calls the overall value “Average” because it cannot establish whether the history is complete. Example: marks 80, 70, 90 with credits 3, 3, 2 give **78.75**. Grading and repeat-course limitations are explained in the [user guide](docs/USER_GUIDE.md).
 
